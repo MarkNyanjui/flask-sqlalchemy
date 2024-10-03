@@ -9,7 +9,7 @@ metadata = MetaData()
 db = SQLAlchemy(metadata = metadata)
 
 """
--> Must have the __tablename property
+-> Must have the __tablename__ property
 -> Must have at least one column (attribute)
 -> Must inherit from db.Model
 """
@@ -21,6 +21,14 @@ class Menu(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.Text)
     price = db.Column(db.Integer)
+
+    # instance method to convert row to json
+    def to_json(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "price": self.price
+        }
 
 class Category(db.Model):
     __tablename__ = "categories"
