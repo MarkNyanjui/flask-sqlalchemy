@@ -1,3 +1,4 @@
+from datetime import datetime
 from app import app
 from models import db, Menu, Category
 
@@ -12,18 +13,24 @@ with app.app_context():
     Menu.query.delete()
 
     # 2. Start adding data to our models and persist to db
+    category = Category(name="Lunch")
+    db.session.add(category)
+    db.session.commit()
+
+    print("Category seeded")
+
     menus = []
-    menu1 = Menu(name = "Smocha", price=60)
+    menu1 = Menu(name = "Smocha", price=60, quantity=10, category=category, created_at=datetime.now())
     menus.append(menu1)
-    rnb = Menu(name="Rice n Beans", price=150)
+    rnb = Menu(name="Rice n Beans", price=150, quantity=10, category=category, created_at=datetime.now())
     menus.append(rnb)
-    shawarma = Menu(name="Shawarma", price=300)
+    shawarma = Menu(name="Shawarma", price=300, quantity=10, category=category, created_at=datetime.now())
     menus.append(shawarma)
-    hotdog = Menu(name="Hotdog", price=150)
+    hotdog = Menu(name="Hotdog", price=150, quantity=10, category=category, created_at=datetime.now())
     menus.append(hotdog)
-    pilau = Menu(name="Pilau", price=200)
+    pilau = Menu(name="Pilau", price=200, quantity=10, category=category, created_at=datetime.now())
     menus.append(pilau)
-    burgers = Menu(name="Burgers", price=350)
+    burgers = Menu(name="Burgers", price=350, quantity=10, category=category, created_at=datetime.now())
     menus.append(burgers)
 
     db.session.add_all(menus)

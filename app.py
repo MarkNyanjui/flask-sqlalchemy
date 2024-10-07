@@ -1,13 +1,18 @@
+import os
 from flask import Flask, request
 from flask_migrate import Migrate
+from dotenv import load_dotenv
 
-from models import db, Menu
+from models import db, Menu, Category
+
+# import config from .env file
+load_dotenv()
 
 # create flask instance
 app = Flask(__name__)
 
 # configuring flask through the config object (dict)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///restaurant.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
 # allow alchemy to display generate sql on the terminal
 app.config['SQLALCHEMY_ECHO'] = True
 
@@ -50,3 +55,12 @@ def create_menu():
         "message": "Menu created successfully",
         "menu": menu.to_dict()
     }
+
+@app.get('/categories/<id>')
+def get_category(id):
+    category = Category.query.filter_by(id = id).first()
+
+    if category == None:
+        return { "message": "Category not found" }, 404
+
+    return category.to_dict(rules=('-menus.category',))

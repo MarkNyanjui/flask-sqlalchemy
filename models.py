@@ -19,14 +19,19 @@ class Menu(db.Model, SerializerMixin):
 
     # table columns
     id = db.Column(db.Integer, primary_key = True)
-    name = db.Column(db.Text)
-    price = db.Column(db.Integer)
+    name = db.Column(db.Text, nullable=False)
+    price = db.Column(db.Integer, nullable=False)
+    quantity = db.Column(db.Integer, nullable=True, default=0)
+    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
+    created_at = db.Column(db.TIMESTAMP)
 
+    #defining many to one
+    category = db.relationship("Category", back_populates="menus")
     # serializer rules (negates)
-    serialize_rules = ('-price',)
+    serialize_rules = ('-category.menus', '-category_id')
 
     # select specific fields
-    serialize_only = ('name',)
+    # serialize_only = ('name',)
 
 class Category(db.Model, SerializerMixin):
     __tablename__ = "categories"
@@ -34,3 +39,6 @@ class Category(db.Model, SerializerMixin):
     # table columns
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.Text)
+
+    # define one to many
+    menus = db.relationship("Menu", back_populates="category")
