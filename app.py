@@ -29,7 +29,7 @@ def get_menus():
     results = []
 
     for menu in menus:
-        results.append(menu.to_json())
+        results.append(menu.to_dict())
 
     return results
 
@@ -48,5 +48,5 @@ def create_menu():
 
     return {
         "message": "Menu created successfully",
-        "menu": menu.to_json()
+        "menu": menu.to_dict()
     }

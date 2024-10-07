@@ -1,6 +1,6 @@
 from sqlalchemy import MetaData
 from flask_sqlalchemy import SQLAlchemy
-# from sqlalchemy_serializer import SerializerMixin
+from sqlalchemy_serializer import SerializerMixin
 
 # this allows us to define out table and table columns
 metadata = MetaData()
@@ -14,7 +14,7 @@ db = SQLAlchemy(metadata = metadata)
 -> Must inherit from db.Model
 """
 
-class Menu(db.Model):
+class Menu(db.Model, SerializerMixin):
     __tablename__ = "menus"
 
     # table columns
@@ -22,15 +22,13 @@ class Menu(db.Model):
     name = db.Column(db.Text)
     price = db.Column(db.Integer)
 
-    # instance method to convert row to json
-    def to_json(self):
-        return {
-            "id": self.id,
-            "name": self.name,
-            "price": self.price
-        }
+    # serializer rules (negates)
+    serialize_rules = ('-price',)
 
-class Category(db.Model):
+    # select specific fields
+    serialize_only = ('name',)
+
+class Category(db.Model, SerializerMixin):
     __tablename__ = "categories"
 
     # table columns
