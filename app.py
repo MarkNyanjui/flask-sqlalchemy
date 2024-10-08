@@ -2,14 +2,18 @@ import os
 from flask import Flask, request
 from flask_migrate import Migrate
 from dotenv import load_dotenv
+from flask_restful import Resource, Api
 
 from models import db, Menu, Category
+from resources.category import CategoryResource
 
 # import config from .env file
 load_dotenv()
 
 # create flask instance
 app = Flask(__name__)
+
+api = Api(app)
 
 # configuring flask through the config object (dict)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
@@ -22,10 +26,15 @@ migrate = Migrate(app, db)
 # link our db to the flask instance
 db.init_app(app)
 
-@app.get('/')
-def index():
-    # route logic
-    return { "message": "Welcome to my restaurant app" }
+# @app.get('/')
+# def index():
+#     # route logic
+#     return { "message": "Welcome to my restaurant app" }
+
+class Index(Resource):
+    # instance method
+    def get(self):
+        return { "message": "Welcome to my restaurant app" }
 
 @app.get('/menus')
 def get_menus():
@@ -56,11 +65,21 @@ def create_menu():
         "menu": menu.to_dict()
     }
 
-@app.get('/categories/<id>')
-def get_category(id):
-    category = Category.query.filter_by(id = id).first()
+# @app.get('/categories/<id>')
+# def get_category(id):
+#     category = Category.query.filter_by(id = id).first()
 
-    if category == None:
-        return { "message": "Category not found" }, 404
+#     if category == None:
+#         return { "message": "Category not found" }, 404
 
-    return category.to_dict(rules=('-menus.category',))
+#     return category.to_dict(rules=('-menus.category',))
+
+
+api.add_resource(Index, '/')
+"""
+The second route is going to facilitate GET(single), PATCH, DELETE
+PATCH -> /categories/1
+DELETE -> /categories/1
+GET one -> /categories/1
+"""
+api.add_resource(CategoryResource, '/categories', '/categories/<id>')

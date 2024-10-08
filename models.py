@@ -42,3 +42,5 @@ class Category(db.Model, SerializerMixin):
 
     # define one to many
     menus = db.relationship("Menu", back_populates="category")
+
+    serialize_rules = ('-menus',)
