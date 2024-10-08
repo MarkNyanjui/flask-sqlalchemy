@@ -3,6 +3,7 @@ from flask import Flask, request
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 from flask_restful import Resource, Api
+from flask_cors import CORS
 
 from models import db, Menu, Category
 from resources.category import CategoryResource
@@ -12,6 +13,9 @@ load_dotenv()
 
 # create flask instance
 app = Flask(__name__)
+
+# setup cors
+CORS(app)
 
 api = Api(app)
 
