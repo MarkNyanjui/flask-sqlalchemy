@@ -44,3 +44,14 @@ class Category(db.Model, SerializerMixin):
     menus = db.relationship("Menu", back_populates="category")
 
     serialize_rules = ('-menus',)
+
+class User(db.Model, SerializerMixin):
+    __tablename__ = "users"
+
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.Text, nullable=False)
+    phone = db.Column(db.String, nullable=False, unique=True)
+    password = db.Column(db.String, nullable=False)
+
+    # never send password back to client
+    serialize_rules = ('-password',)

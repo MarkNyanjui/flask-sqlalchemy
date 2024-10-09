@@ -4,9 +4,11 @@ from flask_migrate import Migrate
 from dotenv import load_dotenv
 from flask_restful import Resource, Api
 from flask_cors import CORS
+from flask_bcrypt import Bcrypt
 
 from models import db, Menu, Category
 from resources.category import CategoryResource
+from resources.user import UserResource, LoginResource
 
 # import config from .env file
 load_dotenv()
@@ -17,7 +19,11 @@ app = Flask(__name__)
 # setup cors
 CORS(app)
 
+# setup flask-restful
 api = Api(app)
+
+# setup flask-bcrypt
+bcrypt = Bcrypt(app)
 
 # configuring flask through the config object (dict)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
@@ -87,3 +93,5 @@ DELETE -> /categories/1
 GET one -> /categories/1
 """
 api.add_resource(CategoryResource, '/categories', '/categories/<id>')
+api.add_resource(UserResource, '/users')
+api.add_resource(LoginResource, '/login')
