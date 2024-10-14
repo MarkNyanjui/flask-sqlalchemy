@@ -1,10 +1,13 @@
 import os
+from datetime import timedelta
+
 from flask import Flask, request
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 from flask_restful import Resource, Api
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
+from flask_jwt_extended import JWTManager
 
 from models import db, Menu, Category
 from resources.category import CategoryResource
@@ -25,10 +28,17 @@ api = Api(app)
 # setup flask-bcrypt
 bcrypt = Bcrypt(app)
 
+# Setup the Flask-JWT-Extended extension
+jwt = JWTManager(app)
+
 # configuring flask through the config object (dict)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
 # allow alchemy to display generate sql on the terminal
 app.config['SQLALCHEMY_ECHO'] = True
+
+app.config["JWT_SECRET_KEY"] = os.environ.get('JWT_SECRET_KEY')
+# increase the lifespan of the access token
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
 
 # create the migrate object to manage migrations
 migrate = Migrate(app, db)

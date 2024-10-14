@@ -1,5 +1,6 @@
 from flask_restful import Resource, reqparse
 from flask import request
+from flask_jwt_extended import jwt_required
 from models import Category, db
 
 class CategoryResource(Resource):
@@ -10,6 +11,7 @@ class CategoryResource(Resource):
 
     # /categories?page=1&take=100
     # /categories/<id>
+    @jwt_required()
     def get(self, id = None):
         # means retrieve all categories
 
@@ -18,18 +20,20 @@ class CategoryResource(Resource):
 
             print(request.args)
 
-            categories = Category.query.paginate(page = int(request.args.get('page')), per_page= int(request.args.get('take')))
+            # categories = Category.query.paginate(page = int(request.args.get('page')), per_page= int(request.args.get('take')))
+            categories = Category.query.all()
 
             # print(categories)
 
-            for category in categories.items:
+            for category in categories:
                 results.append(category.to_dict())
 
-            return {
-                "total": categories.total,
-                "items": results,
-                "page": categories.page
-            }
+            # return {
+            #     "total": categories.total,
+            #     "items": results,
+            #     "page": categories.page
+            # }
+            return results
 
         category = Category.query.filter_by(id = id).first()
 

@@ -1,6 +1,9 @@
 from flask_restful import Resource, reqparse
 from flask_bcrypt import generate_password_hash, check_password_hash
+from flask_jwt_extended import create_access_token
+
 from models import User, db
+
 
 class UserResource(Resource):
     parser = reqparse.RequestParser()
@@ -32,10 +35,12 @@ class UserResource(Resource):
         db.session.commit()
 
         # 4. generate jwt and send it to react
+        access_token = create_access_token(identity = user.id)
 
         return {
             "message": "User created successfully",
-            "user": user.to_dict()
+            "user": user.to_dict(),
+            "access_token": access_token
         }
 
 class LoginResource(Resource):
@@ -57,9 +62,12 @@ class LoginResource(Resource):
         # if password matches, everything is ok
         if check_password_hash(user.password, data['password']):
             # generate jwt
+            access_token = create_access_token(identity = user.id)
+
             return {
                 "message": "Login successful",
-                "user": user.to_dict()
+                "user": user.to_dict(),
+                "access_token": access_token
             }
         else:
             return {
