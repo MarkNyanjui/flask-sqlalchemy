@@ -32,7 +32,8 @@ bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 
 # configuring flask through the config object (dict)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
+# print(os.environ.get("DATABASE_URL"))
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URL")
 # allow alchemy to display generate sql on the terminal
 app.config['SQLALCHEMY_ECHO'] = True
 

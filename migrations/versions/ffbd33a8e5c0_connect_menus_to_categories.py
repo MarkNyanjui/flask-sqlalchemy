@@ -28,7 +28,7 @@ def upgrade():
         batch_op.alter_column('price',
                existing_type=sa.INTEGER(),
                nullable=False)
-        batch_op.create_foreign_key(None, 'categories', ['category_id'], ['id'])
+        batch_op.create_foreign_key("category_idx", 'categories', ['category_id'], ['id'])
 
     # ### end Alembic commands ###
 
